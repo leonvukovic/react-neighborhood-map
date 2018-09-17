@@ -4,6 +4,8 @@ import axios from 'axios';
 import escapeRegExp from 'escape-string-regexp';
 
 var map;
+var marker;
+var mymarkers = [];
 
 class App extends Component {
 
@@ -17,15 +19,34 @@ class App extends Component {
     this.getVenues()
   }
 
-  updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-    this.checkQuery();
-    this.setMarkers();
+  checkQuery = () => {
+    // Filter the markers based on the query
+    if (this.state.query) {
+      const match = new RegExp(escapeRegExp(this.state.query), 'i')
+      this.updateMarkers(this.state.venues.filter((venues) => match.test(venues.venue.name)))
+    } else {
+      this.updateMarkers(this.state.venues);
+    }
   }
 
   updateMarkers = (markers) => {
-    console.log(markers);
-    this.setState({ markers: markers })
+    this.setState({ markers: markers });
+    this.clearMarkers();
+    this.setMarkers(markers);
+  }
+
+  clearMarkers = (markers) => {
+    // Loop through markers and set map to null for each
+    for (var i=0; i<mymarkers.length; i++) {
+        mymarkers[i].setMap(null);
+    }
+    // Reset the markers array
+    mymarkers = [];
+  }
+
+  updateQuery = (query) => {
+    this.setState({ query: query.trim() })
+    this.checkQuery();
   }
 
   // Get Forsquare data
@@ -62,28 +83,17 @@ class App extends Component {
       zoom: 13
     });
     this.checkQuery();
-    this.setMarkers();
   }
 
-  setMarkers = () => {
-    this.state.markers.map(markers => {
+  setMarkers = (marker) => {
+    marker.map(markers => {
       const marker = new window.google.maps.Marker({
         position: {lat: markers.venue.location.lat, lng: markers.venue.location.lng},
         map: map,
         title: markers.venue.name
       });
-      marker.setMap(map);
+      mymarkers.push(marker);
     })
-  }
-
-  checkQuery = () => {
-    // Filter the markers based on the query
-    if (this.state.query) {
-      const match = new RegExp(escapeRegExp(this.state.query), 'i')
-      this.updateMarkers(this.state.venues.filter((venues) => match.test(venues.venue.name)))
-    } else {
-      this.updateMarkers(this.state.venues);
-    }
   }
 
   render() {
