@@ -5,8 +5,9 @@ import escapeRegExp from 'escape-string-regexp';
 
 var map;
 var marker;
-var saveMarkers = [];
+var savedMarkers = [];
 var filteredMarkers = [];
+var index;
 
 class App extends Component {
 
@@ -27,15 +28,22 @@ class App extends Component {
   checkQueryIf = () => {
     const match = new RegExp(escapeRegExp(this.state.query), 'i')
     filteredMarkers = this.state.markers.filter((marker) => match.test(marker.title));
-    this.clearMarkers(filteredMarkers);
+    this.arrayDiff(filteredMarkers, savedMarkers);
+    // TODO: Tu sad treba složiti provjeru savedMarkers i filteredMarkers
+    // this.clearMarkers(filteredMarkers);
   }
   checkQueryElse = () => {
     filteredMarkers = this.state.markers;
     this.showMarkers(filteredMarkers);
   }
 
+  arrayDiff = (filteredMarkers, savedMarkers) => {
+    // console.log(filteredMarkers);
+    // console.log(savedMarkers);
+  }
+
   clearMarkers = (filteredMarkers) => {
-    console.log(filteredMarkers);
+    // console.log(filteredMarkers);
     // Loop through markers and set map to null for each
     for (var i = 0; i < filteredMarkers.length; i++) {
       filteredMarkers[i].setMap(null);
@@ -43,7 +51,7 @@ class App extends Component {
   }
 
   showMarkers = (filteredMarkers) => {
-    console.log(filteredMarkers);
+    // console.log(filteredMarkers);
     // Loop through markers and set map to null for each
     for (var i = 0; i < filteredMarkers.length; i++) {
       filteredMarkers[i].setMap(map);
@@ -94,9 +102,9 @@ class App extends Component {
         title: markers.venue.name,
         animation: window.google.maps.Animation.DROP
       });
-      saveMarkers.push(marker);
+      savedMarkers.push(marker);
       this.setState({
-        markers: saveMarkers
+        markers: savedMarkers
       });
     })
   }
