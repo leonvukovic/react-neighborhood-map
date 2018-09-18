@@ -5,48 +5,49 @@ import escapeRegExp from 'escape-string-regexp';
 
 var map;
 var marker;
-var mymarkers = [];
+var saveMarkers = [];
+var filteredMarkers = [];
 
 class App extends Component {
 
   state = {
     venues: [],
-    markers: [],
-    query: ''
+    query: '',
+    markers: []
   }
 
   componentDidMount() {
     this.getVenues()
   }
 
-  checkQuery = () => {
-    // Filter the markers based on the query
-    if (this.state.query) {
-      const match = new RegExp(escapeRegExp(this.state.query), 'i')
-      this.updateMarkers(this.state.venues.filter((venues) => match.test(venues.venue.name)))
-    } else {
-      this.updateMarkers(this.state.venues);
-    }
-  }
-
-  updateMarkers = (markers) => {
-    this.setState({ markers: markers });
-    this.clearMarkers();
-    this.setMarkers(markers);
-  }
-
-  clearMarkers = (markers) => {
-    // Loop through markers and set map to null for each
-    for (var i=0; i<mymarkers.length; i++) {
-        mymarkers[i].setMap(null);
-    }
-    // Reset the markers array
-    mymarkers = [];
-  }
-
   updateQuery = (query) => {
     this.setState({ query: query.trim() })
-    this.checkQuery();
+  }
+
+  checkQueryIf = () => {
+    const match = new RegExp(escapeRegExp(this.state.query), 'i')
+    filteredMarkers = this.state.markers.filter((marker) => match.test(marker.title));
+    this.clearMarkers(filteredMarkers);
+  }
+  checkQueryElse = () => {
+    filteredMarkers = this.state.markers;
+    this.showMarkers(filteredMarkers);
+  }
+
+  clearMarkers = (filteredMarkers) => {
+    console.log(filteredMarkers);
+    // Loop through markers and set map to null for each
+    for (var i = 0; i < filteredMarkers.length; i++) {
+      filteredMarkers[i].setMap(null);
+    }
+  }
+
+  showMarkers = (filteredMarkers) => {
+    console.log(filteredMarkers);
+    // Loop through markers and set map to null for each
+    for (var i = 0; i < filteredMarkers.length; i++) {
+      filteredMarkers[i].setMap(map);
+    }
   }
 
   // Get Forsquare data
@@ -82,21 +83,32 @@ class App extends Component {
       center: {lat: 46.305746, lng: 16.336607},
       zoom: 13
     });
-    this.checkQuery();
+    this.setMarkers();
   }
 
-  setMarkers = (marker) => {
-    marker.map(markers => {
-      const marker = new window.google.maps.Marker({
+  setMarkers = () => {
+    this.state.venues.map(markers => {
+      marker = new window.google.maps.Marker({
         position: {lat: markers.venue.location.lat, lng: markers.venue.location.lng},
         map: map,
-        title: markers.venue.name
+        title: markers.venue.name,
+        animation: window.google.maps.Animation.DROP
       });
-      mymarkers.push(marker);
+      saveMarkers.push(marker);
+      this.setState({
+        markers: saveMarkers
+      });
     })
   }
 
   render() {
+    // Filter the markers based on the query
+    if (this.state.query) {
+      this.checkQueryIf();
+    } else {
+      this.checkQueryElse();
+    }
+
     return (
       <main>
         <input
