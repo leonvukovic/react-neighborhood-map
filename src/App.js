@@ -29,17 +29,24 @@ class App extends Component {
     const match = new RegExp(escapeRegExp(this.state.query), 'i')
     filteredMarkers = this.state.markers.filter((marker) => match.test(marker.title));
     this.arrayDiff(filteredMarkers, savedMarkers);
-    // TODO: Tu sad treba složiti provjeru savedMarkers i filteredMarkers
-    // this.clearMarkers(filteredMarkers);
   }
   checkQueryElse = () => {
     filteredMarkers = this.state.markers;
     this.showMarkers(filteredMarkers);
   }
 
-  arrayDiff = (filteredMarkers, savedMarkers) => {
-    // console.log(filteredMarkers);
-    // console.log(savedMarkers);
+  arrayDiff = (arr1, arr2) => {
+    var newArr = [];
+
+    arr1.map(function(val){
+     arr2.indexOf(val) < 0 ? newArr.push(val) : '';
+    });
+
+    arr2.map(function(val){
+     arr1.indexOf(val) < 0 ? newArr.push(val) : '';
+    });
+
+    this.clearMarkers(newArr);
   }
 
   clearMarkers = (filteredMarkers) => {
