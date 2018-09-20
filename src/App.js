@@ -91,17 +91,20 @@ class App extends Component {
   }
 
   initMap = () => {
+    // Create map
     map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 46.305746, lng: 16.336607},
       zoom: 13
     });
 
+    // Create infowindow
     var infowindow = new window.google.maps.InfoWindow();
 
+    // Create markers
     this.state.venues.map(markers => {
-
       var contentString = `${markers.venue.name}`
 
+      // Create marker
       var marker = new window.google.maps.Marker({
         position: {lat: markers.venue.location.lat, lng: markers.venue.location.lng},
         map: map,
@@ -110,20 +113,43 @@ class App extends Component {
         icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
       });
 
-      marker.addListener('click', function() {
-        marker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
-        infowindow.setContent(contentString);
-        infowindow.open(map, marker);
-      });
-
-      infowindow.addListener('closeclick',function(){
-         marker.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
-      });
-
+      // Save marker object in state
       savedMarkers.push(marker);
       this.setState({
         markers: savedMarkers
       });
+
+      // On marker click
+      marker.addListener('click', function() {
+        if (infoWindowStatus(infowindow)){
+          // infowindow is open
+          infowindow.close(map, marker);
+          // Loop through markers and set icon
+          for (var i = 0; i < savedMarkers.length; i++) {
+            savedMarkers[i].setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
+          }
+          marker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+
+        } else {
+          // infowindow is closed
+          marker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+      });
+
+      // Close infowindow on exit button
+      infowindow.addListener('closeclick', function(){
+        marker.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
+      });
+
+      // Check if infowindow is open or closed
+      function infoWindowStatus(infowindow){
+        var map = infowindow.getMap();
+        return (map !== null && typeof map !== "undefined");
+      }
     })
   }
 
