@@ -4,7 +4,6 @@ import axios from 'axios';
 import escapeRegExp from 'escape-string-regexp';
 
 var map;
-var marker;
 var savedMarkers = [];
 var filteredMarkers = [];
 var index;
@@ -50,7 +49,6 @@ class App extends Component {
   }
 
   clearMarkers = (filteredMarkers) => {
-    // console.log(filteredMarkers);
     // Loop through markers and set map to null for each
     for (var i = 0; i < filteredMarkers.length; i++) {
       filteredMarkers[i].setMap(null);
@@ -58,8 +56,7 @@ class App extends Component {
   }
 
   showMarkers = (filteredMarkers) => {
-    // console.log(filteredMarkers);
-    // Loop through markers and set map to null for each
+    // Loop through markers and set map for each
     for (var i = 0; i < filteredMarkers.length; i++) {
       filteredMarkers[i].setMap(map);
     }
@@ -98,17 +95,25 @@ class App extends Component {
       center: {lat: 46.305746, lng: 16.336607},
       zoom: 13
     });
-    this.setMarkers();
-  }
 
-  setMarkers = () => {
+    var infowindow = new window.google.maps.InfoWindow();
+
     this.state.venues.map(markers => {
-      marker = new window.google.maps.Marker({
+
+      var contentString = `${markers.venue.name}`
+
+      var marker = new window.google.maps.Marker({
         position: {lat: markers.venue.location.lat, lng: markers.venue.location.lng},
         map: map,
         title: markers.venue.name,
         animation: window.google.maps.Animation.DROP
       });
+
+      marker.addListener('click', function() {
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
+      });
+
       savedMarkers.push(marker);
       this.setState({
         markers: savedMarkers
