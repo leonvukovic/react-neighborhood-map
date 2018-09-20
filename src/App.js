@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Places from './components/Places';
 import axios from 'axios';
 import escapeRegExp from 'escape-string-regexp';
 
@@ -168,6 +169,7 @@ class App extends Component {
           value={this.state.query}
           onChange={(event) => this.updateQuery(event.target.value)}
         />
+        <Places places={this.state.venues} query={this.state.query}/>
         <div id="map"></div>
       </main>
     );
