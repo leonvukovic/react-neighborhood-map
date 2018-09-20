@@ -26,25 +26,22 @@ class App extends Component {
 
   checkQueryIf = () => {
     const match = new RegExp(escapeRegExp(this.state.query), 'i')
+    this.showMarkers(savedMarkers);
     filteredMarkers = this.state.markers.filter((marker) => match.test(marker.title));
     this.arrayDiff(filteredMarkers, savedMarkers);
   }
   checkQueryElse = () => {
-    filteredMarkers = this.state.markers;
-    this.showMarkers(filteredMarkers);
+    this.showMarkers(savedMarkers);
   }
 
   arrayDiff = (arr1, arr2) => {
     var newArr = [];
-
     arr1.map(function(val){
      arr2.indexOf(val) < 0 ? newArr.push(val) : '';
     });
-
     arr2.map(function(val){
      arr1.indexOf(val) < 0 ? newArr.push(val) : '';
     });
-
     this.clearMarkers(newArr);
   }
 
