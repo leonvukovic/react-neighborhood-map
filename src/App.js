@@ -106,12 +106,18 @@ class App extends Component {
         position: {lat: markers.venue.location.lat, lng: markers.venue.location.lng},
         map: map,
         title: markers.venue.name,
-        animation: window.google.maps.Animation.DROP
+        animation: window.google.maps.Animation.DROP,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
       });
 
       marker.addListener('click', function() {
+        marker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
+      });
+
+      infowindow.addListener('closeclick',function(){
+         marker.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
       });
 
       savedMarkers.push(marker);
