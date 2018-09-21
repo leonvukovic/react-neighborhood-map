@@ -7,7 +7,6 @@ import escapeRegExp from 'escape-string-regexp';
 var map;
 var savedMarkers = [];
 var filteredMarkers = [];
-var index;
 
 class App extends Component {
 
@@ -100,7 +99,7 @@ class App extends Component {
 
     // Create markers
     this.state.venues.map(markers => {
-      var contentString = `${markers.venue.name}`
+
 
       // Create marker
       var marker = new window.google.maps.Marker({
@@ -119,6 +118,10 @@ class App extends Component {
 
       // On marker click
       marker.addListener('click', function() {
+        markerClick(marker);
+      });
+
+      function markerClick(marker) {
         if (infoWindowStatus(infowindow)){
           // infowindow is open
           infowindow.close(map, marker);
@@ -127,21 +130,30 @@ class App extends Component {
             savedMarkers[i].setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
           }
           marker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
-          infowindow.setContent(contentString);
+          infowindow.setContent(marker.title);
           infowindow.open(map, marker);
 
         } else {
           // infowindow is closed
           marker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
-          infowindow.setContent(contentString);
+          infowindow.setContent(marker.title);
           infowindow.open(map, marker);
         }
-      });
+      }
 
       // Close infowindow on exit button
-      infowindow.addListener('closeclick', function(){
+      infowindow.addListener('closeclick', function() {
         marker.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
       });
+
+      // Place click open infoWindow
+      this.openInfoWindow = (place) => {
+        this.state.markers.filter((marker) => {
+          if (marker.title === place.venue.name) {
+            markerClick(marker);
+          }
+        });
+      }
 
       // Check if infowindow is open or closed
       function infoWindowStatus(infowindow){
@@ -169,7 +181,7 @@ class App extends Component {
           value={this.state.query}
           onChange={(event) => this.updateQuery(event.target.value)}
         />
-        <Places places={this.state.venues} query={this.state.query}/>
+      <Places openInfoWindow={this.openInfoWindow} places={this.state.venues} query={this.state.query}/>
         <div id="map"></div>
       </main>
     );

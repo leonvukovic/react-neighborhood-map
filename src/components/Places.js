@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import escapeRegExp from 'escape-string-regexp';
 
 class Places extends Component {
+  // Clicked places list item
+  openInfoWindow = (place) => {
+    this.props.openInfoWindow && this.props.openInfoWindow(place);
+  }
+
   render() {
     // Variable that holds filtered places
     let showingPlaces
@@ -16,7 +21,7 @@ class Places extends Component {
 
     // Map over data from state and make list of places
     const placesList = showingPlaces.map((venues, i) => {
-      return <li className="App-place" onClick={(e) => this.openModal(venues, e)} key={i}>{venues.venue.name}</li>
+      return <li className="App-place" onClick={(e) => this.openInfoWindow(venues, e)} key={i}>{venues.venue.name}</li>
     });
 
     return (
