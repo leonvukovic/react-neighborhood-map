@@ -173,15 +173,20 @@ class App extends Component {
 
     return (
       <main>
-        <input
+        <header className="App-header">
+          <h1 className="App-title">Welcome to React Neighborghood-map app</h1>
+        </header>
+        <div className="App-menu">
+          <input
           aria-label="Search places"
           className="App-search-places"
           type="text"
           placeholder="Search places"
           value={this.state.query}
           onChange={(event) => this.updateQuery(event.target.value)}
-        />
-      <Places openInfoWindow={this.openInfoWindow} places={this.state.venues} query={this.state.query}/>
+          />
+          <Places openInfoWindow={this.openInfoWindow} places={this.state.venues} query={this.state.query}/>
+        </div>
         <div id="map"></div>
       </main>
     );
