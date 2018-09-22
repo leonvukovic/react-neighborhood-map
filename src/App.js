@@ -37,10 +37,10 @@ class App extends Component {
   arrayDiff = (arr1, arr2) => {
     var newArr = [];
     arr1.map(function(val){
-     arr2.indexOf(val) < 0 ? newArr.push(val) : '';
+     return arr2.indexOf(val) < 0 ? newArr.push(val) : '';
     });
     arr2.map(function(val){
-     arr1.indexOf(val) < 0 ? newArr.push(val) : '';
+     return arr1.indexOf(val) < 0 ? newArr.push(val) : '';
     });
     this.clearMarkers(newArr);
   }
@@ -152,6 +152,8 @@ class App extends Component {
           if (marker.title === place.venue.name) {
             markerClick(marker);
           }
+
+          return marker;
         });
       }
 
@@ -160,6 +162,8 @@ class App extends Component {
         var map = infowindow.getMap();
         return (map !== null && typeof map !== "undefined");
       }
+
+      return marker;
     })
   }
 
@@ -186,7 +190,7 @@ class App extends Component {
           onChange={(event) => this.updateQuery(event.target.value)}
           />
           <Places openInfoWindow={this.openInfoWindow} places={this.state.venues} query={this.state.query}/>
-          <a href="https://foursquare.com/" target="_blank" className="App-menu__bottom-link"><p>Powerd by </p><img src="https://seeklogo.com/images/F/foursquare-new-logo-D1F831A9E1-seeklogo.com.png" alt="foursquare logo"/></a>
+          <a href="https://foursquare.com/" rel="noopener noreferrer" target="_blank" className="App-menu__bottom-link"><p>Powerd by </p><img src="https://seeklogo.com/images/F/foursquare-new-logo-D1F831A9E1-seeklogo.com.png" alt="foursquare logo"/></a>
         </div>
         <div id="map"></div>
       </main>
