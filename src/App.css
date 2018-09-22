@@ -41,14 +41,34 @@
 
 .App-menu {
   width: 25%;
-  height: 100%;
+  height: calc(100% - 100px);
   position: fixed;
   z-index: 1;
   background: #efefef;
   top: 100px;
-  padding: 40px 20px;
+  padding: 30px 20px;
   box-sizing: border-box;
   text-align: left;
+}
+
+.App-menu__bottom-link {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.App-menu__bottom-link p {
+  font-size: 14px;
+  color: #2f4859;
+  margin-right: 10px
+}
+
+.App-menu__bottom-link img {
+  width: 20px;
 }
 
 #map {
@@ -82,7 +102,7 @@
   border: 1px solid #dbe2e8;
   border-radius: 5px;
   font-size: 14px;
-  padding: 20px 10px;
+  padding: 0px 10px;
   box-sizing: border-box;
   margin-bottom: 5px;
   display: flex;

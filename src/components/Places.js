@@ -21,7 +21,7 @@ class Places extends Component {
 
     // Map over data from state and make list of places
     const placesList = showingPlaces.map((venues, i) => {
-      return <li className="App-place" onClick={(e) => this.openInfoWindow(venues, e)} key={i}>{venues.venue.name}</li>
+      return <li tabIndex="0" className="App-place" onClick={(e) => this.openInfoWindow(venues, e)} key={i}>{venues.venue.name}</li>
     });
 
     return (

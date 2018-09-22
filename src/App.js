@@ -186,6 +186,7 @@ class App extends Component {
           onChange={(event) => this.updateQuery(event.target.value)}
           />
           <Places openInfoWindow={this.openInfoWindow} places={this.state.venues} query={this.state.query}/>
+          <a href="https://foursquare.com/" target="_blank" className="App-menu__bottom-link"><p>Powerd by </p><img src="https://seeklogo.com/images/F/foursquare-new-logo-D1F831A9E1-seeklogo.com.png" alt="foursquare logo"/></a>
         </div>
         <div id="map"></div>
       </main>
