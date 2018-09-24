@@ -8,6 +8,11 @@ var map;
 var savedMarkers = [];
 var filteredMarkers = [];
 
+window.gm_authFailure = function(error) {
+  // if map fail to load display a useful message to the user
+  alert('Google maps failed to load!');
+}
+
 class App extends Component {
 
   state = {
@@ -99,7 +104,6 @@ class App extends Component {
 
     // Create markers
     this.state.venues.map(markers => {
-
 
       // Create marker
       var marker = new window.google.maps.Marker({
@@ -197,6 +201,8 @@ class App extends Component {
     );
   }
 }
+
+
 
 function scriptLoad(url) {
   const index = window.document.getElementsByTagName("script")[0]
